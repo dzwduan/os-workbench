@@ -5,6 +5,11 @@
 1. https://jyywiki.cn/OS/2024/
 1. https://wiki.csie.ncku.edu.tw/linux/schedule [所有必须看完，Lab略]
 
+## Linux kernel 性能评测
+1. https://weedge.github.io/perf-book-cn/zh/
+1. https://en.algorithmica.org/hpc/
+1. [perf lab](https://github.com/dendibakh/perf-ninja)
+
 ## project要求
 1. 实现一个完整的操作系统 [xv6/rcore] (说明:这部分仅用于将前面的内容串起来，做起来会非常快)
 1. emulator + boot linux 

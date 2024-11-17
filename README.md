@@ -4,6 +4,7 @@
 
 1. https://jyywiki.cn/OS/2024/
 1. https://wiki.csie.ncku.edu.tw/linux/schedule [所有必须看完，Lab略]
+1. how to get os-demo? wget -c -r -np -k -L -p https://jyywiki.cn/os-demos/ --no-check-certificate
 
 ## Linux kernel 性能评测
 1. https://weedge.github.io/perf-book-cn/zh/

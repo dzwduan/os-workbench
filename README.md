@@ -13,7 +13,7 @@
 1. https://github.com/yhzhang0128/egos-2000
 1. https://github.com/mit-pdos/xv6-riscv
 1. https://github.com/sysprog21/rv32emu
-1. https://github.com/sysprog21/shecc
+1. https://github.com/sysprog21/semu
 
 ## 必做项
 1. 学习记录

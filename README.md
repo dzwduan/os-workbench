@@ -9,6 +9,7 @@
 1. https://weedge.github.io/perf-book-cn/zh/
 1. https://en.algorithmica.org/hpc/
 1. [perf lab](https://github.com/dendibakh/perf-ninja)
+1. [hpc code](https://github.com/sslotin/amh-code)
 
 ## project要求
 1. 实现一个完整的操作系统 [xv6/rcore] (说明:这部分仅用于将前面的内容串起来，做起来会非常快)

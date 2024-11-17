@@ -3,7 +3,7 @@
 ## 学习材料
 
 1. https://jyywiki.cn/OS/2024/
-1. https://wiki.csie.ncku.edu.tw/linux/schedule
+1. https://wiki.csie.ncku.edu.tw/linux/schedule [所有必须看完，Lab略]
 
 ## project要求
 1. 实现一个完整的操作系统 [xv6/rcore] (说明:这部分仅用于将前面的内容串起来，做起来会非常快)

@@ -1,8 +1,10 @@
-*
-!*/
+.*
+*.[oad]
 !.gitignore
-!Makefile
-!*.c
-!*.h
-
+*~
+a.out
+a.out-*
+*-32*
+*-64*
+*.pdf
 !*.md

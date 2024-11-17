@@ -1,3 +1,5 @@
+export TOKEN   := ???
+
 # ----- DO NOT MODIFY -----
 
 ifeq ($(NAME),)
@@ -28,4 +30,4 @@ $(NAME)-32.so: $(DEPS) # 32bit shared library
 clean:
 	rm -f $(NAME)-64 $(NAME)-32 $(NAME)-64.so $(NAME)-32.so
 
-include ../oslabs.mk
+include ../Makefile.lab

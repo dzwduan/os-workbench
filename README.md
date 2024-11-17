@@ -1,3 +1,3 @@
-# 实验的额外内容
+# 实验的内容
 
-参考[kperf](https://github.com/dzwduan/kperf) 实现kernel profiler的功能
+https://jyywiki.cn/OS/2023/labs/L3.html

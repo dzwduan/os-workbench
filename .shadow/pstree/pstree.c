@@ -70,7 +70,7 @@ void show_pids() {
         int pid = atoi(f->d_name);
         char name[128];
         pid_list[pid_idx] = pid;
-        get_name_by_pid(pid, pid_names[pid_idx]);
+        get_name_by_pid(pid, &pid_names[pid_idx]);
         pid_idx++;
       }
     }

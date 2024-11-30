@@ -52,6 +52,8 @@ void get_name_by_pid(pid_t pid, char* name) {
   if(fgets(buf, sizeof(buf)-1, fp) != NULL) {
     sscanf(buf, "Name:   %s", name);
   }
+
+  printf("pid = %d, name = %s\n", pid, name);
 }
 
 void show_pids() {
@@ -75,9 +77,9 @@ void show_pids() {
     }
   }
 
-  for (int i = 0; i<pid_idx; i++) {
-    printf("%s - %d \n", pid_names[i], pid_list[i]);
-  }
+  // for (int i = 0; i<pid_idx; i++) {
+  //   printf("%s - %d \n", pid_names[i], pid_list[i]);
+  // }
 }
 
 void sort_pids() {

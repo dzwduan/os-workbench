@@ -17,6 +17,19 @@ void show_usage() {
          "-V, --version        dump version info");
 }
 
+
+void print_version() {
+  printf("pstree 0.0.1\n");
+}
+
+void show_pids() {
+
+}
+
+void sort_pids() {
+  
+}
+
 int main(int argc, char *argv[]) {
 
   int ch;
@@ -24,9 +37,12 @@ int main(int argc, char *argv[]) {
   while ((ch = getopt_long(argc, argv, short_opts, long_opts, NULL)) != -1) {
     switch (ch) {
     case 'p':
+      show_pids();
+      break;
     case 'n':
+      sort_pids();
     case 'V':
-      opt=optarg;
+      print_version();
       break;
     default:
       printf("parse args failed, input p / n / V\n");

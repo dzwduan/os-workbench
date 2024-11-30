@@ -14,7 +14,7 @@
 #define MAX_SIZE 1024
 
 int pid_list[MAX_SIZE] = {}; 
-char * pid_names[] = {}
+char * pid_names[MAX_SIZE] = {};
 static int pid_idx = 0;
 
 const char *short_opts = "pnV";

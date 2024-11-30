@@ -69,9 +69,8 @@ void show_pids() {
       if (is_digit(f->d_name)) {
         int pid = atoi(f->d_name);
         char name[128];
-        get_name_by_pid(pid, name);
         pid_list[pid_idx] = pid;
-        pid_names[pid_idx] = name;
+        get_name_by_pid(pid, pid_names[pid_idx]);
         pid_idx++;
       }
     }

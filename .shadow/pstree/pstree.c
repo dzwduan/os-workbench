@@ -1,8 +1,20 @@
 #include <assert.h>
 #include <bits/getopt_core.h>
+#include <string.h>
 #include <getopt.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
+#include <dirent.h>
+#include <ctype.h>
+
+#define FILE_TYPE 8
+#define DIR_TYPE  4
+
+#define MAX_SIZE 1024
+
+char pid_list[MAX_SIZE] = {}; 
+static int pid_idx = 0;
 
 const char *short_opts = "pnV";
 struct option long_opts[] = {{"show-pids", no_argument, NULL, 'p'},
@@ -22,12 +34,36 @@ void print_version() {
   printf("pstree 0.0.1\n");
 }
 
-void show_pids() {
+int is_digit(char * s) {
+  for(int i = 0; s[i]; i++) {
+    if (!isdigit(s[i])) return 0;
+  }
+  return 1;
+}
 
+void show_pids() {
+ struct dirent *f;
+  DIR * dirp = opendir("/proc");
+  if (dirp==NULL) {
+    printf("failed open /proc\n");
+    exit(1);
+  }
+
+  while((f = readdir(dirp))!=NULL) {
+    if (f->d_type==DIR_TYPE) {
+      if (is_digit(f->d_name)) {
+        pid_list[pid_idx++] = atoi(f->d_name);
+      }
+    }
+  }
+
+  for (int i = 0; i<pid_idx; i++) {
+    printf("%d ", pid_list[i]);
+  }
 }
 
 void sort_pids() {
-  
+
 }
 
 int main(int argc, char *argv[]) {
@@ -45,7 +81,7 @@ int main(int argc, char *argv[]) {
       print_version();
       break;
     default:
-      printf("parse args failed, input p / n / V\n");
+      printf("parse args failed, input ./pstree [p / n / V]\n");
       return -1;
     }
   }

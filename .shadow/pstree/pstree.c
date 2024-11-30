@@ -37,7 +37,7 @@ void print_version() {
 int is_digit(char * s) {
   if (s==NULL) return 0;
   for(int i = 0; s[i]; i++) {
-    if (!isdigit((unsigned char)s[i])) return 0;
+    if (!isdigit(s[i])) return 0;
   }
   return 1;
 }
@@ -53,6 +53,7 @@ void show_pids() {
   while((f = readdir(dirp))!=NULL) {
     if (f->d_type==DIR_TYPE) {
       if (is_digit(f->d_name)) {
+        printf("%s ", f->d_name);
         pid_list[pid_idx++] = atoi(f->d_name);
       }
     }

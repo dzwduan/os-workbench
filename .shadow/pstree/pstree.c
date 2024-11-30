@@ -43,9 +43,10 @@ int is_digit(char * s) {
   return 1;
 }
 
-void get_name_by_pid(pid_t pid, char* name) {
+char * get_name_by_pid(pid_t pid) {
   char pid_path[32];
   char buf[128];
+  char *name;
   sprintf(pid_path, "/proc/%d/status", pid);
   FILE* fp = fopen(pid_path, "r");
   if (fp==NULL) exit(1);
@@ -54,6 +55,7 @@ void get_name_by_pid(pid_t pid, char* name) {
   }
 
   printf("pid = %d, name = %s\n", pid, name);
+  return name;
 }
 
 void show_pids() {
@@ -70,7 +72,7 @@ void show_pids() {
         int pid = atoi(f->d_name);
         char name[32];
         pid_list[pid_idx] = pid;
-        get_name_by_pid(pid, pid_names[pid_idx]);
+        pid_names[pid_idx] = get_name_by_pid(pid);
         pid_idx++;
       }
     }

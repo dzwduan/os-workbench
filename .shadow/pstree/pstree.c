@@ -46,7 +46,8 @@ int is_digit(char * s) {
 char * get_name_by_pid(pid_t pid) {
   char pid_path[32];
   char buf[128];
-  char *name = NULL;
+  char *name = malloc(128);
+  if (name == NULL) exit(1);
   sprintf(pid_path, "/proc/%d/status", pid);
   FILE* fp = fopen(pid_path, "r");
   if (fp==NULL) exit(1);

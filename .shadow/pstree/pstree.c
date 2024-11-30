@@ -15,6 +15,7 @@
 
 int pid_list[MAX_SIZE] = {}; 
 char * pid_names[MAX_SIZE] = {};
+int ppid_list[MAX_SIZE] = {};
 static int pid_idx = 0;
 
 const char *short_opts = "pnV";
@@ -32,7 +33,7 @@ void show_usage() {
 
 
 void print_version() {
-  printf("pstree 0.0.1\n");
+  fprintf(stderr, "pstree 0.0.1\n");
 }
 
 int is_digit(char * s) {
@@ -55,8 +56,25 @@ char * get_name_by_pid(pid_t pid) {
     sscanf(buf, "Name:   %s", name);
   }
 
-  printf("pid = %d, name = %s\n", pid, name);
+  fclose(fp);
+  //printf("pid = %d, name = %s\n", pid, name);
   return name;
+}
+
+pid_t get_ppid_by_pid(pid_t pid) {
+  char pid_path[32];
+  char buf[128];
+  pid_t ppid = -1;
+  sprintf(pid_path, "/proc/%d/status", pid);
+  FILE* fp = fopen(pid_path, "r");
+  if (fp == NULL) exit(1);
+  while (fgets(buf, sizeof(buf) - 1, fp) != NULL) {
+    if (sscanf(buf, "PPid: %d", &ppid) == 1) {
+      break;
+    }
+  }
+  fclose(fp);
+  return ppid;
 }
 
 void show_pids() {
@@ -73,12 +91,16 @@ void show_pids() {
         int pid = atoi(f->d_name);
         char name[32];
         pid_list[pid_idx] = pid;
+        ppid_list[pid_idx] = get_ppid_by_pid(pid);
         pid_names[pid_idx] = get_name_by_pid(pid);
         pid_idx++;
       }
     }
   }
 
+  //TODO: dump tree by pid parent and children
+
+  closedir(dirp);
   for (int i = 0; i<pid_idx; i++) {
     printf("%s - %d \n", pid_names[i], pid_list[i]);
   }

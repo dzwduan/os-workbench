@@ -68,18 +68,18 @@ void show_pids() {
     if (f->d_type==DIR_TYPE) {
       if (is_digit(f->d_name)) {
         int pid = atoi(f->d_name);
-        pid_list[pid_idx] = pid;
         char name[128];
         get_name_by_pid(pid, name);
+        pid_list[pid_idx] = pid;
         pid_names[pid_idx] = name;
         pid_idx++;
       }
     }
   }
 
-  // for (int i = 0; i<pid_idx; i++) {
-  //   printf("%s - %d \n", pid_names[i], pid_list[i]);
-  // }
+  for (int i = 0; i<pid_idx; i++) {
+    printf("%s - %d \n", pid_names[i], pid_list[i]);
+  }
 }
 
 void sort_pids() {

@@ -35,8 +35,9 @@ void print_version() {
 }
 
 int is_digit(char * s) {
+  if (s==NULL) return 0;
   for(int i = 0; s[i]; i++) {
-    if (!isdigit(s[i])) return 0;
+    if (!isdigit((unsigned char)s[i])) return 0;
   }
   return 1;
 }

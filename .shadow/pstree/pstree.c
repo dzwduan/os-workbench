@@ -1,5 +1,6 @@
 #include <assert.h>
 #include <bits/getopt_core.h>
+#include <cstddef>
 #include <string.h>
 #include <getopt.h>
 #include <stdio.h>
@@ -46,7 +47,7 @@ int is_digit(char * s) {
 char * get_name_by_pid(pid_t pid) {
   char pid_path[32];
   char buf[128];
-  char *name;
+  char *name = NULL;
   sprintf(pid_path, "/proc/%d/status", pid);
   FILE* fp = fopen(pid_path, "r");
   if (fp==NULL) exit(1);

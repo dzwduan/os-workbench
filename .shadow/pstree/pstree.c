@@ -50,7 +50,7 @@ void get_name_by_pid(pid_t pid, char* name) {
   FILE* fp = fopen(pid_path, "r");
   if (fp==NULL) exit(1);
   if(fgets(buf, sizeof(buf)-1, fp) != NULL) {
-    sscanf(buf, "%*s, %s", name);
+    sscanf(buf, "Name:   %s", name);
   }
 }
 

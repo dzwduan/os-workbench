@@ -14,6 +14,7 @@
 #define MAX_SIZE 1024
 
 int pid_list[MAX_SIZE] = {}; 
+char * pid_names[] = {}
 static int pid_idx = 0;
 
 const char *short_opts = "pnV";
@@ -42,6 +43,17 @@ int is_digit(char * s) {
   return 1;
 }
 
+void get_name_by_pid(pid_t pid, char* name) {
+  char pid_path[32];
+  char buf[128];
+  sprintf(pid_path, "/proc/%d/status", pid);
+  FILE* fp = fopen(pid_path, "r");
+  if (fp==NULL) exit(1);
+  if(fgets(buf, sizeof(buf)-1, fp) != NULL) {
+    sscanf(buf, "%*s, %s", name);
+  }
+}
+
 void show_pids() {
  struct dirent *f;
   DIR * dirp = opendir("/proc");
@@ -53,14 +65,18 @@ void show_pids() {
   while((f = readdir(dirp))!=NULL) {
     if (f->d_type==DIR_TYPE) {
       if (is_digit(f->d_name)) {
-        printf("%s ", f->d_name);
-        pid_list[pid_idx++] = atoi(f->d_name);
+        int pid = atoi(f->d_name);
+        pid_list[pid_idx] = pid;
+        char name[128];
+        get_name_by_pid(pid, name);
+        pid_names[pid_idx] = name;
+        pid_idx++;
       }
     }
   }
 
   for (int i = 0; i<pid_idx; i++) {
-    printf("%d ", pid_list[i]);
+    printf("%s - %d \n", pid_names[i], pid_list[i]);
   }
 }
 

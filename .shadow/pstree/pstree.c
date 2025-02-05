@@ -163,7 +163,7 @@ void show_pids() {
   int ppid_list[MAX_SIZE];
   get_ppid_list(pid_len, ppid_list);
 
-  for (int i = 0; i < pid_idx; i++) {
+  for (int i = 0; i < pid_len; i++) {
     printf("%s - %d \n", pid_name_list[i], pid_list[i]);
   }
 }

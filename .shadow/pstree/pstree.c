@@ -12,6 +12,7 @@
 #define DIR_TYPE 4
 
 #define MAX_SIZE 1024
+#define STR_MAX_SIZE 128
 
 // int pid_list[MAX_SIZE] = {};
 // char *pid_names[MAX_SIZE] = {};
@@ -108,7 +109,7 @@ int *get_pid_list(int pid_len) {
 
 char **get_pid_name_list(int pid_len) {
   // 默认name最大长度128
-  char **pid_name_list = malloc(pid_len * sizeof(char *) * 128);
+  char **pid_name_list = malloc(pid_len * sizeof(char *) * STR_MAX_SIZE);
   if (pid_name_list == NULL) {
     perror("malloc");
     exit(1);
@@ -159,9 +160,8 @@ int get_root(int *pid_list, int *ppid_list) {
 void show_pids() {
   int pid_len = get_pid_len();
   int *pid_list = get_pid_list(pid_len);
-  int *ppid_list = get_ppid_list(pid_len);
   char **pid_names = get_pid_name_list(pid_len);
-
+  int *ppid_list = get_ppid_list(pid_len);
 
   for (int i = 0; i < pid_idx; i++) {
     printf("%s - %d \n", pid_names[i], pid_list[i]);

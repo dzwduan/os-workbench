@@ -30,7 +30,7 @@ void show_usage() {
          "Display a tree of process.\n"
          "-p, --show-pids      show all pid's pid num\n"
          "-n, --numeric-sort   dump pid children by pid num from small to big\n"
-         "-V, --version        dump version info");
+         "-V, --version        dump version info\n");
 }
 
 void print_version() { fprintf(stderr, "pstree 0.0.1\n"); }

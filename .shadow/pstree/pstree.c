@@ -156,7 +156,7 @@ void show_pids() {
   int pid_list[MAX_SIZE] = {};
   int ppid_list[MAX_SIZE] = {};
 
-  char *pid_name_list[STR_MAX_SIZE] = {};
+  char *pid_name_list[10] = {};
   get_pid_list(pid_len, pid_list);
   get_ppid_list(pid_len, ppid_list);
   get_pid_name_list(pid_len, pid_name_list);

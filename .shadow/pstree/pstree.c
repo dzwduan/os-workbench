@@ -81,8 +81,8 @@ pid_t get_ppid_by_pid(pid_t pid) {
   return ppid;
 }
 
-int *get_ppid_list(int ppid_len) {
-  int *ppid_list = malloc(ppid_len * sizeof(int));
+void get_ppid_list(int ppid_len, int *ppid_list) {
+  ppid_list = malloc(ppid_len * sizeof(int));
   if (ppid_list == NULL) {
     perror("malloc");
     exit(1);
@@ -90,12 +90,10 @@ int *get_ppid_list(int ppid_len) {
   for (int i = 0; i < ppid_len; i++) {
     ppid_list[i] = get_ppid_by_pid(i);
   }
-
-  return ppid_list;
 }
 
-int *get_pid_list(int pid_len) {
-  int *pid_list = malloc(pid_len * sizeof(int));
+void get_pid_list(int pid_len, int *pid_list) {
+  pid_list = malloc(pid_len * sizeof(int));
   if (pid_list == NULL) {
     perror("malloc");
     exit(1);
@@ -103,13 +101,11 @@ int *get_pid_list(int pid_len) {
   for (int i = 0; i < pid_len; i++) {
     pid_list[i] = i;
   }
-
-  return pid_list;
 }
 
-char **get_pid_name_list(int pid_len) {
+void get_pid_name_list(int pid_len, char *pid_name_list[STR_MAX_SIZE]) {
   // 默认name最大长度128
-  char **pid_name_list = malloc(pid_len * sizeof(char *) * STR_MAX_SIZE);
+  pid_name_list = malloc(pid_len * sizeof(char *) * STR_MAX_SIZE);
   if (pid_name_list == NULL) {
     perror("malloc");
     exit(1);
@@ -117,8 +113,6 @@ char **get_pid_name_list(int pid_len) {
   for (int i = 0; i < pid_len; i++) {
     pid_name_list[i] = get_name_by_pid(i);
   }
-
-  return pid_name_list;
 }
 
 int get_pid_len() {
@@ -159,12 +153,25 @@ int get_root(int *pid_list, int *ppid_list) {
 
 void show_pids() {
   int pid_len = get_pid_len();
-  int *pid_list = get_pid_list(pid_len);
-  char **pid_names = get_pid_name_list(pid_len);
-  int *ppid_list = get_ppid_list(pid_len);
+  int *pid_list = malloc(pid_len * sizeof(int));
+  if (pid_list == NULL) {
+    perror("malloc");
+    exit(1);
+  }
+  get_pid_list(pid_len, pid_list);
+
+  char *pid_name_list[STR_MAX_SIZE];
+  get_pid_name_list(pid_len, pid_name_list);
+
+  int *ppid_list = malloc(pid_len * sizeof(int));
+  if (ppid_list == NULL) {
+    perror("malloc");
+    exit(1);
+  }
+  get_ppid_list(pid_len, ppid_list);
 
   for (int i = 0; i < pid_idx; i++) {
-    printf("%s - %d \n", pid_names[i], pid_list[i]);
+    printf("%s - %d \n", pid_name_list[i], pid_list[i]);
   }
 }
 

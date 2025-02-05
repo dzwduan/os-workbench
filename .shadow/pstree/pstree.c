@@ -153,21 +153,14 @@ int get_root(int *pid_list, int *ppid_list) {
 
 void show_pids() {
   int pid_len = get_pid_len();
-  int *pid_list = malloc(pid_len * sizeof(int));
-  if (pid_list == NULL) {
-    perror("malloc");
-    exit(1);
-  }
+  int pid_list[MAX_SIZE];
+
   get_pid_list(pid_len, pid_list);
 
-  char *pid_name_list[STR_MAX_SIZE];
+  char *pid_name_list[MAX_SIZE];
   get_pid_name_list(pid_len, pid_name_list);
 
-  int *ppid_list = malloc(pid_len * sizeof(int));
-  if (ppid_list == NULL) {
-    perror("malloc");
-    exit(1);
-  }
+  int ppid_list[MAX_SIZE];
   get_ppid_list(pid_len, ppid_list);
 
   for (int i = 0; i < pid_idx; i++) {

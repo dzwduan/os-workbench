@@ -103,7 +103,7 @@ void get_pid_list(int pid_len, int *pid_list) {
   }
 }
 
-void get_pid_name_list(int pid_len, char *pid_name_list[STR_MAX_SIZE]) {
+void get_pid_name_list(int pid_len, char *pid_name_list[]) {
   // 默认name最大长度128
   pid_name_list = malloc(pid_len * sizeof(char *) * STR_MAX_SIZE);
   if (pid_name_list == NULL) {
@@ -158,11 +158,8 @@ void show_pids() {
 
   char *pid_name_list[MAX_SIZE] = {};
   get_pid_list(pid_len, pid_list);
-
-  get_pid_name_list(pid_len, pid_name_list);
-
   get_ppid_list(pid_len, ppid_list);
-
+  get_pid_name_list(pid_len, pid_name_list);
   for (int i = 0; i < pid_len; i++) {
     printf("%s - %d \n", pid_name_list[i], pid_list[i]);
   }

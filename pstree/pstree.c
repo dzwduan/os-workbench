@@ -28,6 +28,7 @@
     Assert(_written > 0, "name len overflow\n");                               \
   } while (0)
 
+// TODO: implement more cmp type
 enum CMP {
   CMP_PID,
   CMP_TYPE_IPC,
@@ -42,7 +43,6 @@ uint8_t cmp = CMP_PID;
 typedef struct proc {
   pid_t pid;
   pid_t ppid;
-  uint8_t cnt;
   char name[128];
   struct proc *child;
   struct proc *bro;
@@ -52,7 +52,7 @@ typedef struct proc {
 //  ^                        |
 //  |child                   |
 //  |                        |
-// Proc*                      |
+// Proc*                     |
 
 void show_usage() {
   printf("Usage: pstree [-pnV]\n"
@@ -95,26 +95,25 @@ void parse_args(int argc, char *argv[]) {
   }
 }
 
-// read /proc/pid/status info
+
 proc_t *create_proc(int pid, char *name, int ppid) {
   proc_t *proc = (proc_t *)malloc(sizeof(proc_t));
   proc->pid = pid;
   proc->ppid = ppid;
   strncpy(proc->name, name, sizeof(proc->name) - 1);
-  proc->cnt = 0;
   proc->child = NULL;
   proc->bro = NULL;
   return proc;
 }
 
+// read /proc/pid/status info and save to proc_t struct
 proc_t *read_proc_info(pid_t pid) {
-
   char info_path[128];
   char line[128];
   char name[128];
   pid_t ppid = 0;
   int ret = snprintf(info_path, sizeof(info_path), "/proc/%d/status", pid);
-  Assert(ret > 0 && ret < sizeof(info_path), "read proc info error\n");
+  Assert(ret > 0 , "read proc info error\n");
 
   FILE *fp = fopen(info_path, "r");
   if (!fp) {
@@ -135,25 +134,35 @@ proc_t *read_proc_info(pid_t pid) {
   return create_proc(pid, name, ppid);
 }
 
-proc_t *find_proc(proc_t *root, int pid) {
-  if (!root) return NULL;
 
-  if (root->pid == pid) return root;
+// find proc by pid
+proc_t *find_proc(proc_t *root, int pid) {
+  if (!root)
+    return NULL;
+
+  if (root->pid == pid)
+    return root;
 
   proc_t *proc = find_proc(root->bro, pid);
-  if (proc) return proc;
+  if (proc)
+    return proc;
 
   return find_proc(root->child, pid);
 }
 
-void free_tree(proc_t * root) {
-  if (!root) return;
+
+// free tree recursively
+void free_tree(proc_t *root) {
+  if (!root)
+    return;
 
   free_tree(root->child);
   free_tree(root->bro);
   free(root);
 }
 
+// build tree by read /proc
+// 注意获取到child以及parent后，需要判断是否有空间插入，没有空间child需要插入parent->child->bro_last位置
 void build_tree(proc_t *root) {
   struct dirent *entry;
   DIR *dir = opendir("/proc");
@@ -169,14 +178,14 @@ void build_tree(proc_t *root) {
     proc_t *proc = read_proc_info(pid);
     if (!proc)
       continue;
-    proc_t * parent = find_proc(root, proc->ppid);
+    proc_t *parent = find_proc(root, proc->ppid);
     Assert(parent, "find parent failed\n");
 
     // 有空间则直接插入
     if (!parent->child) {
       parent->child = proc;
     } else {
-    // 否则插入到最后一个bro后面
+      // 否则插入到child的最后一个bro后面
       proc_t *last = parent->child;
       while (last->bro) {
         last = last->bro;
@@ -188,9 +197,10 @@ void build_tree(proc_t *root) {
   closedir(dir);
 }
 
-
-void print_tree(proc_t *root, int depth, char* prefix) {
-  if (!root) return;
+// print tree recursively by depth
+void print_tree(proc_t *root, int depth, char *prefix) {
+  if (!root)
+    return;
 
   printf("%s", prefix);
   if (depth > 0) {
@@ -210,7 +220,7 @@ void print_tree(proc_t *root, int depth, char* prefix) {
   }
 
   print_tree(root->bro, depth, prefix);
-  print_tree(root->child, depth+1, new_perfix);
+  print_tree(root->child, depth + 1, new_perfix);
 }
 
 int main(int argc, char *argv[]) {

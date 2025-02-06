@@ -105,5 +105,5 @@ systemd─┬─2*[agetty]
 
 
 ## 参考的一些案例
-1. https://github.com/phoulx/nju-os-workbench/blob/main/M1%20-%20pstree/pstree.c
-2. https://github.com/Michael1015198808/os-workbench/blob/master/pstree/pstree.c
+1. https://github.com/phoulx/nju-os-workbench
+2. https://github.com/Michael1015198808/os-workbench

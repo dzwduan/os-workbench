@@ -1,6 +1,4 @@
 #include <assert.h>
-#include <bits/getopt_core.h>
-#include <bits/getopt_ext.h>
 #include <string.h>
 #include <getopt.h>
 #include <stdio.h>

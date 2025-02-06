@@ -61,7 +61,7 @@ Display a tree of processes.
 1. 在内存中把树建好，按命令行参数要求排序；
 1. 把树打印到终端上。
 
-## 实现的结果
+## 需要实现的结果
 ```
 shell >./pstree-32 / or ./pstree-64
 systemd─┬─2*[agetty]
@@ -89,3 +89,21 @@ systemd─┬─2*[agetty]
         ├─unattended-upgr───{unattended-upgr}
         └─wsl-pro-service───7*[{wsl-pro-service}]
 ```
+
+## 思路
+1. 主要卡的地方是打印进程树，一开始的思路是多建几个数组，然后产生父子的映射关系，再额外建一张表，代表在树的第几层，但是复杂度过高，占用空间也很大
+1. 参考代码用的是二叉树结构代表整个进程树，需要先将树的结构存起来，后边就方便了
+1. ./pstree-64 -n 不是默认会生成按pid排序的吗？ 查看 man pstree发现还能够根据type进行排序，因此需要预留一个cmp接口
+
+        -n, --numeric-sort  sort output by PID
+        -N TYPE, --ns-sort=TYPE
+                      sort output by this namespace type
+                              (cgroup, ipc, mnt, net, pid, time, user, uts)
+
+1. 如何生成强劲的测试？Why not deepseek
+
+
+
+## 参考的一些案例
+1. https://github.com/phoulx/nju-os-workbench/blob/main/M1%20-%20pstree/pstree.c
+2. https://github.com/Michael1015198808/os-workbench/blob/master/pstree/pstree.c

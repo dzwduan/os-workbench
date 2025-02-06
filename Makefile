@@ -7,6 +7,7 @@ endif
 SRCS   := $(shell find . -maxdepth 1 -name "*.c")
 DEPS   := $(shell find . -maxdepth 1 -name "*.h") $(SRCS)
 CFLAGS += -O1 -std=gnu11 -ggdb -Wall -Werror -Wno-unused-result -Wno-unused-value -Wno-unused-variable
+CFLAGS += -g
 
 .PHONY: all git test clean commit-and-make
 
@@ -24,6 +25,12 @@ $(NAME)-64.so: $(DEPS) # 64bit shared library
 
 $(NAME)-32.so: $(DEPS) # 32bit shared library
 	gcc -fPIC -shared -m32 $(CFLAGS) $(SRCS) -o $@ $(LDFLAGS)
+
+check-64: $(NAME)-64
+	valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(NAME)-64
+
+check-32: $(NAME)-32
+	valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(NAME)-32
 
 clean:
 	rm -f $(NAME)-64 $(NAME)-32 $(NAME)-64.so $(NAME)-32.so

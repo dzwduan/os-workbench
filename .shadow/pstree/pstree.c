@@ -113,6 +113,11 @@ int main(int argc, char *argv[]) {
 
   int ch;
   char *opt;
+  assert(argc >= 1);
+  if (argc == 1) {
+    show_usage();
+    return 0;
+  }
   while ((ch = getopt_long(argc, argv, short_opts, long_opts, NULL)) != -1) {
     switch (ch) {
     case 'p':

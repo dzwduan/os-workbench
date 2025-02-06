@@ -100,6 +100,7 @@ proc_t *create_proc(int pid, char *name, int ppid) {
   proc_t *proc = (proc_t *)malloc(sizeof(proc_t));
   proc->pid = pid;
   proc->ppid = ppid;
+  proc->name = malloc(strlen(name) + 1);
   strncpy(proc->name, name, sizeof(proc->name) - 1);
   proc->cnt = 0;
   proc->child = NULL;

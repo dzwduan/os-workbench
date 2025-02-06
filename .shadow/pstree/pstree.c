@@ -1,24 +1,23 @@
 #include <assert.h>
 #include <bits/getopt_core.h>
-#include <ctype.h>
-#include <dirent.h>
+#include <bits/getopt_ext.h>
+#include <string.h>
 #include <getopt.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
+#include <dirent.h>
+#include <ctype.h>
 
 #define FILE_TYPE 8
-#define DIR_TYPE 4
+#define DIR_TYPE  4
 
 #define MAX_SIZE 1024
-#define STR_MAX_SIZE 128
 
-// int pid_list[MAX_SIZE] = {};
-// char *pid_names[MAX_SIZE] = {};
-// int ppid_list[MAX_SIZE] = {};
+int pid_list[MAX_SIZE] = {};
+char * pid_names[MAX_SIZE] = {};
+int ppid_list[MAX_SIZE] = {};
 static int pid_idx = 0;
-int tree_index_table[MAX_SIZE] = {};
 
 const char *short_opts = "pn:V";
 struct option long_opts[] = {{"show-pids", no_argument, NULL, 'p'},
@@ -30,37 +29,36 @@ void show_usage() {
          "Display a tree of process.\n"
          "-p, --show-pids      show all pid's pid num\n"
          "-n, --numeric-sort   dump pid children by pid num from small to big\n"
-         "-V, --version        dump version info\n");
+         "-V, --version        dump version info");
 }
 
-void print_version() { fprintf(stderr, "pstree 0.0.1\n"); }
 
-int is_digit(char *s) {
-  if (s == NULL)
-    return 0;
-  for (int i = 0; s[i]; i++) {
-    if (!isdigit(s[i]))
-      return 0;
+void print_version() {
+  fprintf(stderr, "pstree 0.0.1\n");
+}
+
+int is_digit(char * s) {
+  if (s==NULL) return 0;
+  for(int i = 0; s[i]; i++) {
+    if (!isdigit(s[i])) return 0;
   }
   return 1;
 }
 
-char *get_name_by_pid(pid_t pid) {
+char * get_name_by_pid(pid_t pid) {
   char pid_path[32];
   char buf[128];
   char *name = malloc(128);
-  if (name == NULL)
-    exit(1);
+  if (name == NULL) exit(1);
   sprintf(pid_path, "/proc/%d/status", pid);
-  FILE *fp = fopen(pid_path, "r");
-  if (fp == NULL)
-    exit(1);
-  if (fgets(buf, sizeof(buf) - 1, fp) != NULL) {
+  FILE* fp = fopen(pid_path, "r");
+  if (fp==NULL) exit(1);
+  if(fgets(buf, sizeof(buf)-1, fp) != NULL) {
     sscanf(buf, "Name:   %s", name);
   }
 
   fclose(fp);
-  // printf("pid = %d, name = %s\n", pid, name);
+  //printf("pid = %d, name = %s\n", pid, name);
   return name;
 }
 
@@ -69,9 +67,8 @@ pid_t get_ppid_by_pid(pid_t pid) {
   char buf[128];
   pid_t ppid = -1;
   sprintf(pid_path, "/proc/%d/status", pid);
-  FILE *fp = fopen(pid_path, "r");
-  if (fp == NULL)
-    exit(1);
+  FILE* fp = fopen(pid_path, "r");
+  if (fp == NULL) exit(1);
   while (fgets(buf, sizeof(buf) - 1, fp) != NULL) {
     if (sscanf(buf, "PPid: %d", &ppid) == 1) {
       break;
@@ -81,99 +78,41 @@ pid_t get_ppid_by_pid(pid_t pid) {
   return ppid;
 }
 
-void get_ppid_list(int ppid_len, int *ppid_list) {
-  ppid_list = malloc(ppid_len * sizeof(int));
-  if (ppid_list == NULL) {
-    perror("malloc");
-    exit(1);
-  }
-  for (int i = 0; i < ppid_len; i++) {
-    ppid_list[i] = get_ppid_by_pid(i);
-  }
-}
-
-void get_pid_list(int pid_len, int *pid_list) {
-  pid_list = malloc(pid_len * sizeof(int));
-  if (pid_list == NULL) {
-    perror("malloc");
-    exit(1);
-  }
-  for (int i = 0; i < pid_len; i++) {
-    pid_list[i] = i;
-  }
-}
-
-void get_pid_name_list(int pid_len, char *pid_name_list[]) {
-  // 默认name最大长度128
-  pid_name_list = malloc(pid_len * sizeof(char *) * STR_MAX_SIZE);
-  if (pid_name_list == NULL) {
-    perror("malloc");
-    exit(1);
-  }
-  for (int i = 0; i < pid_len; i++) {
-    pid_name_list[i] = get_name_by_pid(i);
-  }
-}
-
-int get_pid_len() {
-  struct dirent *f;
-  DIR *dirp = opendir("/proc");
-  if (dirp == NULL) {
+void show_pids() {
+ struct dirent *f;
+  DIR * dirp = opendir("/proc");
+  if (dirp==NULL) {
     printf("failed open /proc\n");
     exit(1);
   }
 
-  int pid_len = 0;
-  while ((f = readdir(dirp)) != NULL) {
-    if (f->d_type == DIR_TYPE) {
+  while((f = readdir(dirp))!=NULL) {
+    if (f->d_type==DIR_TYPE) {
       if (is_digit(f->d_name)) {
-        pid_len++;
+        int pid = atoi(f->d_name);
+        char name[32];
+        pid_list[pid_idx] = pid;
+        ppid_list[pid_idx] = get_ppid_by_pid(pid);
+        pid_names[pid_idx] = get_name_by_pid(pid);
+        pid_idx++;
       }
     }
   }
+
+  //TODO: dump tree by pid parent and children
 
   closedir(dirp);
-  return pid_len;
-}
-
-int get_root(int *pid_list, int *ppid_list) {
-  int root_pid = -1;
-  for (int i = 0; i < pid_idx; i++) {
-    for (int j = 0; j < pid_idx; j++) {
-      if (ppid_list[i] == pid_list[j]) {
-        break;
-      }
-      if (j == pid_idx - 1) {
-        root_pid = pid_list[i];
-      }
-    }
-  }
-  return root_pid;
-}
-
-void show_pids() {
-  int pid_len = get_pid_len();
-  int pid_list[MAX_SIZE] = {};
-  int ppid_list[MAX_SIZE] = {};
-
-  char *pid_name_list[10] = {};
-  get_pid_list(pid_len, pid_list);
-  get_ppid_list(pid_len, ppid_list);
-  get_pid_name_list(pid_len, pid_name_list);
-  for (int i = 0; i < pid_len; i++) {
-    printf("%s - %d \n", pid_name_list[i], pid_list[i]);
+  for (int i = 0; i<pid_idx; i++) {
+    printf("%s - %d \n", pid_names[i], pid_list[i]);
   }
 }
 
-// dump tree by num pid as root
-void sort_pids(int num) {}
+void sort_pids() {
+
+}
 
 int main(int argc, char *argv[]) {
-  assert(argc >= 1);
-  if (argc == 1) {
-    show_usage();
-    return 0;
-  }
+
   int ch;
   char *opt;
   while ((ch = getopt_long(argc, argv, short_opts, long_opts, NULL)) != -1) {
@@ -182,8 +121,7 @@ int main(int argc, char *argv[]) {
       show_pids();
       break;
     case 'n':
-      assert(is_digit(optarg));
-      sort_pids(atoi(optarg));
+      sort_pids();
     case 'V':
       print_version();
       break;

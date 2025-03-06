@@ -1,8 +1,11 @@
 # 项目说明
 
+!!! if you fork this repo, remember fork all the branch !!!
+
 ## 学习材料
 
 1. https://jyywiki.cn/OS/2024/
+1. https://git.nju.edu.cn/jyy/os2025
 1. https://wiki.csie.ncku.edu.tw/linux/schedule [所有必须看完，Lab略]
 1. how to get os-demo? wget -c -r -np -k -L -p https://jyywiki.cn/os-demos/ --no-check-certificate
 

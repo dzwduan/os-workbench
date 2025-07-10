@@ -17,7 +17,8 @@
 
 ## project要求
 1. 参考 [cemu](https://github.com/cyyself/cemu) + [soc-simulator](https://github.com/cyyself/soc-simulator) 实现full system emulator boot linux
-
+2. 参考 [rv32-simulator](https://github.com/jensen-yan/risc-v-simulator) 写一个类似的带文档的
+ 
 
 ## project 参考资料
 1. https://github.com/yhzhang0128/egos-2000
